@@ -1,12 +1,7 @@
+node_modules/
+dist/
+.venv/
 __pycache__/
 *.pyc
-venv/
-.buildozer/
-bin/
-*.egg-info/
-dist/
+.env
 output/*.mp3
-output/*.wav
-*.log
-nohup.out
-.venv/
