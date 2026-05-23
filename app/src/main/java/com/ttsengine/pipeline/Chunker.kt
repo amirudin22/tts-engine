@@ -1,7 +1,7 @@
 package com.ttsengine.pipeline
 
 object Chunker {
-    private const val MAX_CHARS = 2800
+    const val MAX_CHARS = 2800
 
     fun chunk(text: String): List<String> {
         val sentences = text.split(Regex("(?<=[.!?])\\s+"))

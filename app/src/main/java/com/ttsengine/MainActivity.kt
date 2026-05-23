@@ -111,7 +111,7 @@ class MainActivity : ComponentActivity() {
                         "Gagal menghubungi DeepSeek. Periksa koneksi internet."
                     e.message?.contains("TTS") == true ->
                         "Gagal sintesis suara: ${e.message}"
-                    true -> e.message ?: "Terjadi kesalahan"
+                    else -> e.message ?: "Terjadi kesalahan"
                 }
                 pipelineState = PipelineState.Error(msg)
             }
