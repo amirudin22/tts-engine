@@ -7,8 +7,6 @@ import android.media.MediaPlayer
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.os.Environment
-import android.provider.MediaStore
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -42,9 +40,18 @@ class MainActivity : ComponentActivity() {
     var pipelineState by mutableStateOf<PipelineState>(PipelineState.Idle)
         private set
 
+    private var pendingPipeline: (() -> Unit)? = null
+
     private val requestPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
-    ) { }
+    ) { granted ->
+        if (granted) {
+            pendingPipeline?.invoke()
+            pendingPipeline = null
+        } else {
+            Toast.makeText(this, "Izin penyimpanan diperlukan", Toast.LENGTH_SHORT).show()
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,7 +63,7 @@ class MainActivity : ComponentActivity() {
                     MainScreen(
                         pipelineState = pipelineState,
                         onRunPipeline = { text, config, apiKey ->
-                            if (checkStoragePermission()) {
+                            if (checkStoragePermission(text, config, apiKey)) {
                                 runPipeline(text, config, apiKey)
                             }
                         },
@@ -69,13 +76,14 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    private fun checkStoragePermission(): Boolean {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) return true
-        val permission = Manifest.permission.WRITE_EXTERNAL_STORAGE
-        return if (ContextCompat.checkSelfPermission(this, permission)
+    private fun checkStoragePermission(text: String, config: TTSConfig, apiKey: String?): Boolean {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) return true
+        val perm = Manifest.permission.WRITE_EXTERNAL_STORAGE
+        return if (ContextCompat.checkSelfPermission(this, perm)
             != PackageManager.PERMISSION_GRANTED
         ) {
-            requestPermissionLauncher.launch(permission)
+            pendingPipeline = { runPipeline(text, config, apiKey) }
+            requestPermissionLauncher.launch(perm)
             false
         } else true
     }
