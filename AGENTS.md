@@ -1,58 +1,46 @@
-# TTS Engine — Android App
+# TTS Engine — React + Capacitor + Python Backend
 
 ## Overview
 
-Kotlin + Jetpack Compose Android app for Text-to-Speech with AI-powered narrative rewriting.
+**Architecture**: React (Vite) frontend → Python (FastAPI) backend → TTS via edge-tts.
+Wrapped as Android app with Capacitor.
 
-**Pipeline**: naskah → AI (DeepSeek API) → parse → rewrite narasi → chunk → TTS → merge audio
+**Pipeline**: naskah → chunk → edge-tts TTS → merge audio
 
-## Architecture
+## Backend (`backend/`)
 
 ```
-app/src/main/java/com/ttsengine/
-├── MainActivity.kt          # Entry point + permission handling
-├── model/
-│   ├── Models.kt            # Segment, Story, PipelineState, TTSConfig
-│   └── Voices.kt            # Voice list & VoiceInfo
-├── ai/
-│   ├── DeepSeekClient.kt    # HTTP client for DeepSeek API (OkHttp)
-│   ├── NaskahParser.kt      # Parse naskah → segments (narasi/dialog)
-│   └── NarasiRewriter.kt    # Rewrite narasi via AI
-├── tts/
-│   ├── TTSManager.kt        # Android TextToSpeech wrapper (synthesizeToFile)
-│   └── AudioMerger.kt       # Merge WAV files (PCM concatenation)
-├── pipeline/
-│   ├── Chunker.kt           # Split text per ~2800 chars
-│   └── TTSPipeline.kt       # Orchestrator
-└── ui/
-    ├── MainScreen.kt        # Compose UI
-    └── theme/Theme.kt       # Material3 theme
+backend/
+├── requirements.txt
+├── .env.example
+├── app/
+│   ├── main.py              # FastAPI app + CORS
+│   ├── config.py            # HOST/PORT settings
+│   ├── schemas.py           # TTSRequest, TTSResponse
+│   ├── api/
+│   │   └── routes.py        # POST /api/tts, GET /api/voices, GET /api/download/{file}
+│   ├── tts/
+│   │   └── engine.py        # edge-tts wrapper (synthesize, synthesize_batch)
+│   └── pipeline/
+│       ├── chunker.py       # Split text per ~2800 chars (sentence-aware)
+│       └── merger.py        # MP3 concatenation merge
 ```
+
+## API Endpoints
+
+- `GET  /api/voices`      — Daftar suara tersedia
+- `POST /api/tts`          — Generate audio dari teks
+  - Body: `{ text, voice, rate, pitch }`
+  - Return: `{ filename, duration_seconds, chunks }`
+- `GET  /api/download/{file}` — Download file audio
+- `GET  /health`           — Health check
 
 ## TTS Engine
 
-Android `TextToSpeech` API — neural voices, multibahasa (ID, JV, SU), gratis, no pip.
+Python `edge-tts` — Microsoft Edge neural TTS, multibahasa (ID, JV, SU), via HTTP.
+Rate: -50% to +50%, pitch: -50Hz to +50Hz.
 
-No ffmpeg/pydub. Audio merge via raw WAV concatenation.
-
-## AI Module
-
-Opsional — via DeepSeek API. Parse naskah jadi segmen (narasi/dialog/subjek/emosi) + rewrite narasi agar natural dibacakan.
-
-## Setup
-
-```bash
-# Build APK
-./gradlew assembleDebug
-# APK at: app/build/outputs/apk/debug/ttsengine-debug.apk
-```
-
-## GitHub Actions
-
-Push ke main → build otomatis via `.github/workflows/android.yml`.
-Download APK: Actions → Build Android APK → artifacts.
-
-## Edge TTS voices (display only — not used in app)
+## Edge TTS voices
 
 | Voice | Gender |
 |---|---|
@@ -63,15 +51,18 @@ Download APK: Actions → Build Android APK → artifacts.
 | `su-ID-JajangNeural` | Sundanese Male |
 | `su-ID-TutiNeural` | Sundanese Female |
 
-## Voice parameters (app)
+## Run Backend
 
-- `rate`: Kecepatan bicara, slider -50% to +50%
-- `pitch`: Pitch suara, slider -50% to +50%
-- Voice selector: dropdown daftar suara
+```bash
+cd backend
+pip install -r requirements.txt
+uvicorn app.main:app --host 0.0.0.0 --port 8000
+```
 
-## Dependencies
+## Setup (Frontend — coming)
 
-- Jetpack Compose + Material3 (UI)
-- OkHttp (DeepSeek API)
-- Kotlin Coroutines (async)
-- AndroidX (core, lifecycle, activity)
+```bash
+cd frontend
+npm install
+npm run dev
+```
