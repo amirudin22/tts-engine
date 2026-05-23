@@ -1,0 +1,12 @@
+__pycache__/
+*.pyc
+venv/
+.buildozer/
+bin/
+*.egg-info/
+dist/
+output/*.mp3
+output/*.wav
+*.log
+nohup.out
+.venv/
