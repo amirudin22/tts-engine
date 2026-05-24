@@ -51,6 +51,36 @@ label {
   margin-bottom: 0.25rem;
 }
 
+.label-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.25rem;
+}
+
+.label-row label {
+  margin-bottom: 0;
+}
+
+.clear-btn {
+  background: none;
+  border: none;
+  color: #ef4444;
+  font-size: 0.8rem;
+  padding: 0.25rem 0.5rem;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.clear-btn:hover:not(:disabled) {
+  background: #fee2e2;
+}
+
+.clear-btn:disabled {
+  color: #fca5a5;
+  cursor: not-allowed;
+}
+
 textarea,
 select,
 input[type="text"] {

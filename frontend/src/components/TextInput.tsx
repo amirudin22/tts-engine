@@ -7,7 +7,14 @@ interface Props {
 export function TextInput({ value, onChange, disabled }: Props) {
   return (
     <div>
-      <label htmlFor="naskah">Naskah</label>
+      <div className="label-row">
+        <label htmlFor="naskah">Naskah</label>
+        {value && (
+          <button className="clear-btn" onClick={() => onChange("")} disabled={disabled}>
+            Hapus
+          </button>
+        )}
+      </div>
       <textarea
         id="naskah"
         rows={8}
