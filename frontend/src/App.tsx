@@ -16,6 +16,7 @@ export default function App() {
   const [status, setStatus] = useState<Status>("idle")
   const [audioUrl, setAudioUrl] = useState("")
   const [filename, setFilename] = useState("")
+  const [srtUrl, setSrtUrl] = useState("")
   const [error, setError] = useState("")
   const [settingsOpen, setSettingsOpen] = useState(false)
 
@@ -36,10 +37,12 @@ export default function App() {
     setStatus("loading")
     setError("")
     setAudioUrl("")
+    setSrtUrl("")
     try {
-      const res = await generateSpeech({ text, voice, rate, pitch })
+      const res = await generateSpeech({ text, voice, rate, pitch, subtitle: true })
       setAudioUrl(getAudioUrl(res.filename))
       setFilename(res.filename)
+      if (res.srt_filename) setSrtUrl(getAudioUrl(res.srt_filename))
       setStatus("success")
     } catch (e) {
       setError(e instanceof Error ? e.message : "Terjadi kesalahan")
@@ -73,7 +76,7 @@ export default function App() {
 
       {status === "loading" && <p>Sedang memproses naskah...</p>}
 
-      {status === "success" && <AudioPlayer url={audioUrl} filename={filename} />}
+      {status === "success" && <AudioPlayer url={audioUrl} filename={filename} srtUrl={srtUrl} />}
 
       {status === "error" && <p>{error}</p>}
 

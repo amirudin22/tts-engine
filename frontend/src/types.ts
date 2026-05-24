@@ -8,12 +8,14 @@ export interface TTSRequest {
   voice: string
   rate: number
   pitch: number
+  subtitle?: boolean
 }
 
 export interface TTSResponse {
   filename: string
   duration_seconds: number
   chunks: number
+  srt_filename: string
 }
 
 export type Status = "idle" | "loading" | "success" | "error"

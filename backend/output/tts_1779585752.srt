@@ -1,0 +1,11 @@
+1
+00:00:00,100 --> 00:00:03,525
+Halo selamat datang di aplikasi TTS Engine.
+
+2
+00:00:03,475 --> 00:00:05,837
+Ini adalah tes subtitle.
+
+3
+00:00:05,837 --> 00:00:07,937
+Semoga berhasil.

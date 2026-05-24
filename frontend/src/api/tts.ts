@@ -39,3 +39,5 @@ export async function generateSpeech(req: TTSRequest): Promise<TTSResponse> {
 export function getAudioUrl(filename: string): string {
   return `${_base}/api/download/${filename}`
 }
+
+export const getSrtUrl = getAudioUrl
