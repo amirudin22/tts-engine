@@ -148,6 +148,28 @@ a {
   color: #2563eb;
 }
 
+.export-row {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  margin-top: 0.5rem;
+}
+
+.share-btn {
+  background: #059669;
+  padding: 0.4rem 0.75rem;
+  font-size: 0.85rem;
+}
+
+.share-btn:hover:not(:disabled) {
+  background: #047857;
+}
+
+.download-link {
+  margin-top: 0;
+  font-size: 0.85rem;
+}
+
 .subtitle {
   background: #222;
   color: #fff;

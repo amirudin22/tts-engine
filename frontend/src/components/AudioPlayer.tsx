@@ -11,6 +11,7 @@ interface Props {
   url: string
   filename: string
   srtUrl?: string
+  label?: string
 }
 
 function parseSRT(srt: string): SubEntry[] {
@@ -37,7 +38,7 @@ function tsToSeconds(ts: string): number {
   return parseInt(h) * 3600 + parseInt(m) * 60 + parseFloat(s)
 }
 
-export function AudioPlayer({ url, filename, srtUrl }: Props) {
+export function AudioPlayer({ url, filename, srtUrl, label }: Props) {
   const audioRef = useRef<HTMLAudioElement>(null)
   const [subs, setSubs] = useState<SubEntry[]>([])
   const [current, setCurrent] = useState("")
@@ -55,6 +56,32 @@ export function AudioPlayer({ url, filename, srtUrl }: Props) {
     const t = audioRef.current.currentTime
     const match = subs.find((s) => t >= s.start && t <= s.end)
     setCurrent(match?.text || "")
+  }
+
+  async function handleShare() {
+    const shareData: ShareData = {
+      title: "TTS Engine",
+      text: label || `Audio dari TTS Engine`,
+      url: url,
+    }
+
+    if (navigator.share) {
+      try {
+        await navigator.share(shareData)
+      } catch {
+        fallbackCopy()
+      }
+    } else {
+      fallbackCopy()
+    }
+  }
+
+  function fallbackCopy() {
+    navigator.clipboard?.writeText(url).then(() => {
+      alert("URL audio disalin ke clipboard")
+    }).catch(() => {
+      window.open(url, "_blank")
+    })
   }
 
   return (
@@ -78,8 +105,11 @@ export function AudioPlayer({ url, filename, srtUrl }: Props) {
         <div className="subtitle">{current}</div>
       )}
 
-      <div>
-        <a href={url} download={filename}>
+      <div className="export-row">
+        <button className="share-btn" onClick={handleShare}>
+          Bagikan
+        </button>
+        <a href={url} download={filename} className="download-link">
           Download Audio
         </a>
       </div>

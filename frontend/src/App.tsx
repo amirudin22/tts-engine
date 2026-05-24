@@ -104,7 +104,7 @@ export default function App() {
                 <span className="result-label">{r.label}</span>
                 <button className="clear-btn" onClick={() => removeResult(r.id)}>Hapus</button>
               </div>
-              <AudioPlayer url={r.audioUrl} filename={r.filename} srtUrl={r.srtUrl} />
+              <AudioPlayer url={r.audioUrl} filename={r.filename} srtUrl={r.srtUrl} label={r.label} />
             </div>
           ))}
         </section>
