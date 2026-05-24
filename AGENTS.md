@@ -81,3 +81,7 @@ cd frontend
 npm install -g vercel
 vercel --prod
 ```
+
+**Live:** `https://frontend-three-ivory-85.vercel.app`
+
+Set URL backend via tombol ⚙ di pojok kanan atas frontend.
