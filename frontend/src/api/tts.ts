@@ -1,26 +1,41 @@
 import type { Voice, TTSRequest, TTSResponse } from "../types"
 
-const BASE = import.meta.env.VITE_API_URL || "http://localhost:8000"
+const STORAGE_KEY = "tts_engine_backend_url"
+const DEFAULT_URL = "http://localhost:8000"
 
-export async function fetchVoices(): Promise<Voice[]> {
-  const res = await fetch(`${BASE}/api/voices`)
-  const data = await res.json()
-  return data.voices
+let _base = localStorage.getItem(STORAGE_KEY) || import.meta.env.VITE_API_URL || DEFAULT_URL
+
+export function getBaseUrl(): string {
+  return _base
 }
 
-export async function generateSpeech(req: TTSRequest): Promise<TTSResponse> {
-  const res = await fetch(`${BASE}/api/tts`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(req),
-  })
+export function setBaseUrl(url: string): void {
+  _base = url.replace(/\/+$/, "")
+  localStorage.setItem(STORAGE_KEY, _base)
+}
+
+async function api(path: string, init?: RequestInit) {
+  const res = await fetch(`${_base}${path}`, init)
   if (!res.ok) {
-    const err = await res.text()
-    throw new Error(err || "Gagal generate audio")
+    const msg = await res.text().catch(() => "Unknown error")
+    throw new Error(msg || `HTTP ${res.status}`)
   }
   return res.json()
 }
 
+export async function fetchVoices(): Promise<Voice[]> {
+  const data = await api("/api/voices")
+  return data.voices
+}
+
+export async function generateSpeech(req: TTSRequest): Promise<TTSResponse> {
+  return api("/api/tts", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(req),
+  })
+}
+
 export function getAudioUrl(filename: string): string {
-  return `${BASE}/api/download/${filename}`
+  return `${_base}/api/download/${filename}`
 }

@@ -1,9 +1,10 @@
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
 import { fetchVoices, generateSpeech, getAudioUrl } from "./api/tts"
 import { TextInput } from "./components/TextInput"
 import { VoiceSelector } from "./components/VoiceSelector"
 import { RateSlider } from "./components/RateSlider"
 import { AudioPlayer } from "./components/AudioPlayer"
+import { SettingsDialog } from "./components/SettingsDialog"
 import type { Voice, Status } from "./types"
 
 export default function App() {
@@ -16,15 +17,19 @@ export default function App() {
   const [audioUrl, setAudioUrl] = useState("")
   const [filename, setFilename] = useState("")
   const [error, setError] = useState("")
+  const [settingsOpen, setSettingsOpen] = useState(false)
 
-  useEffect(() => {
-    fetchVoices()
-      .then((v) => {
-        setVoices(v)
-        if (v.length > 0) setVoice(v[0].id)
-      })
-      .catch(() => setVoices([]))
+  const loadVoices = useCallback(async () => {
+    try {
+      const v = await fetchVoices()
+      setVoices(v)
+      if (v.length > 0) setVoice(v[0].id)
+    } catch {
+      setVoices([])
+    }
   }, [])
+
+  useEffect(() => { loadVoices() }, [loadVoices])
 
   async function handleGenerate() {
     if (!text.trim()) return
@@ -44,7 +49,12 @@ export default function App() {
 
   return (
     <main>
-      <h1>TTS Engine</h1>
+      <div className="header">
+        <h1>TTS Engine</h1>
+        <button className="icon-btn" onClick={() => setSettingsOpen(true)} title="Pengaturan">
+          ⚙
+        </button>
+      </div>
       <p>Ubah naskah menjadi suara alami</p>
 
       <TextInput value={text} onChange={setText} disabled={status === "loading"} />
@@ -66,6 +76,11 @@ export default function App() {
       {status === "success" && <AudioPlayer url={audioUrl} filename={filename} />}
 
       {status === "error" && <p>{error}</p>}
+
+      <SettingsDialog
+        open={settingsOpen}
+        onClose={() => { setSettingsOpen(false); loadVoices() }}
+      />
     </main>
   )
 }

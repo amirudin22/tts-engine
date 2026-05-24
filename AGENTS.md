@@ -59,10 +59,25 @@ pip install -r requirements.txt
 uvicorn app.main:app --host 0.0.0.0 --port 8000
 ```
 
-## Setup (Frontend — coming)
+## Production
+
+**Backend:** `https://tts-engine-production-2934.up.railway.app`
+
+**Frontend env:** `VITE_API_URL=https://tts-engine-production-2934.up.railway.app`
+
+## Run Frontend
 
 ```bash
 cd frontend
 npm install
 npm run dev
+# → http://localhost:5173
+```
+
+## Deploy Frontend to Vercel
+
+```bash
+cd frontend
+npm install -g vercel
+vercel --prod
 ```
