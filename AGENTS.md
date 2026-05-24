@@ -65,6 +65,8 @@ uvicorn app.main:app --host 0.0.0.0 --port 8000
 
 **Frontend env:** `VITE_API_URL=https://tts-engine-production-2934.up.railway.app`
 
+**Frontend Live:** `https://frontend-three-ivory-85.vercel.app`
+
 ## Run Frontend
 
 ```bash
@@ -78,10 +80,16 @@ npm run dev
 
 ```bash
 cd frontend
-npm install -g vercel
 vercel --prod
 ```
 
-**Live:** `https://frontend-three-ivory-85.vercel.app`
+## Build Android APK (Capacitor)
 
-Set URL backend via tombol ⚙ di pojok kanan atas frontend.
+```bash
+cd frontend
+npm run cap:sync        # build web + sync ke Android
+cd android
+./gradlew assembleDebug # output: android/app/build/outputs/apk/debug/app-debug.apk
+```
+
+**APK:** `tts-engine.apk` (3.9 MB) — WebView wrapper, minta izin internet, cleartext traffic enabled.

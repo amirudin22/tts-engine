@@ -5,3 +5,11 @@ __pycache__/
 *.pyc
 .env
 output/*.mp3
+tts-engine.apk
+android/.gradle/
+android/app/build/
+android/build/
+android/capacitor-cordova-android-plugins/
+android/.idea/
+*.iml
+local.properties
