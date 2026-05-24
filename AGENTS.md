@@ -61,9 +61,9 @@ uvicorn app.main:app --host 0.0.0.0 --port 8000
 
 ## Production
 
-**Backend:** `https://tts-engine-production-2934.up.railway.app`
+**Backend:** `https://tts-engine-production-a649.up.railway.app`
 
-**Frontend env:** `VITE_API_URL=https://tts-engine-production-2934.up.railway.app`
+**Frontend env:** `VITE_API_URL=https://tts-engine-production-a649.up.railway.app`
 
 **Frontend Live:** `https://frontend-three-ivory-85.vercel.app`
 
