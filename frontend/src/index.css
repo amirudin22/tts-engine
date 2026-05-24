@@ -162,6 +162,36 @@ a {
   justify-content: center;
 }
 
+section h2 {
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.result-card {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.result-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.result-label {
+  font-size: 0.85rem;
+  color: #555;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex: 1;
+  margin-right: 0.5rem;
+}
+
 .overlay {
   position: fixed;
   inset: 0;
