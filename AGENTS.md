@@ -87,6 +87,7 @@ vercel --prod
 
 ```bash
 cd frontend
+npm run cap:setup       # install capacitor + add android platform (first time only)
 npm run cap:sync        # build web + sync ke Android
 cd android
 ./gradlew assembleDebug # output: android/app/build/outputs/apk/debug/app-debug.apk
