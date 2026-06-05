@@ -1,0 +1,6 @@
+__pycache__/
+*.pyc
+.venv/
+.env
+output/*.mp3
+output/*.srt
